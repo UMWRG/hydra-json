@@ -177,7 +177,6 @@ if __name__ == '__main__':
         write_output("Starting App")
         write_progress(1, json_exporter.num_steps) 
 
-        import pudb; pudb.set_trace()
         validate_plugin_xml(os.path.join(__location__, 'plugin.xml'))
         
         json_exporter.as_xml = args.as_xml
