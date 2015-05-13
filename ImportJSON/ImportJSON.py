@@ -43,9 +43,6 @@ Option                 Short  Parameter    Description
                                            to log in itself.
 ====================== ====== ============ ========================================
 
-
-API docs
-~~~~~~~~
 """
 
 import argparse as ap
@@ -62,11 +59,7 @@ import os, sys
 
 from datetime import datetime
 
-
-if "../" not in sys.path:
-    sys.path.append("../")
-
-from utils.xml2json import xml2json
+from HydraLib.xml2json import xml2json
 
 log = logging.getLogger(__name__)
 
@@ -74,6 +67,7 @@ __location__ = os.path.split(sys.argv[0])[0]
 
 class ImportJSON(object):
     """
+       Importer of JSON files into Hydra. Also accepts XML files.
     """
 
     Network = None

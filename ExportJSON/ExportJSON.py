@@ -24,7 +24,7 @@ Basics
 The plug-in for exporting a network to a JSON file.
 Basic usage::
 
-       ExportJSON.py [-h] [-n network_id] [-s scenario_id] [-d target_dir]
+       ExportJSON.py [-h] [-n network_id] [-s scenario_id] [-d target_dir] [-x]
 
 Options
 ~~~~~~~
@@ -33,10 +33,11 @@ Options
 Option                 Short  Parameter    Description
 ====================== ====== ============ =======================================
 ``--help``             ``-h``              Show help message and exit.
-``--network-id         ``-n`` NETWORK      The ID of the network to be exported.
-``--scenario-id        ``-s`` SCENARIO     The ID of the scenario to be exported.
+``--network-id         ``-n`` NETWORK_ID   The ID of the network to be exported.
+``--scenario-id        ``-s`` SCENARIO_ID  The ID of the scenario to be exported.
                                            (optional)
 ``--target-dir``       ``-d`` TARGET_DIR   Target directory 
+``--as-xml``           ``-x`` AS_XML       Export to XML file instead of JSON.
 ``--server-url``       ``-u`` SERVER-URL   Url of the server the plugin will
                                            connect to.
                                            Defaults to localhost.
@@ -45,9 +46,6 @@ Option                 Short  Parameter    Description
                                            to log in itself.
 ====================== ====== ============ =======================================
 
-
-API docs
-~~~~~~~~
 """
 
 
@@ -58,14 +56,11 @@ from HydraLib import PluginLib
 from HydraLib.PluginLib import JsonConnection
 from HydraLib.HydraException import HydraPluginError
 from HydraLib.PluginLib import write_progress, write_output, validate_plugin_xml
-import time
 import json
 import os, sys
 
-if "../" not in sys.path:
-    sys.path.append("../")
+from HydraLib.xml2json import json2xml
 
-from utils.xml2json import json2xml
 log = logging.getLogger(__name__)
 
 global __location__
@@ -73,6 +68,7 @@ __location__ = os.path.split(sys.argv[0])[0]
 
 class ExportJSON(object):
     """
+       Exporter of Hydra networks to JSON or XML files.
     """
 
     Network = None
@@ -102,14 +98,13 @@ class ExportJSON(object):
             #The network ID can be specified to get the network...
             try:
                 network_id = int(network_id)
-                x = time.time()
                 if scenario_id is None:
                     network = self.connection.call('get_network', {'network_id':network_id})
                 else:
                     network = self.connection.call('get_network', {'network_id':network_id,
                                                         'scenario_ids':[scenario_id]})
 
-                log.info("Network retrieved in %s", time.time()-x)
+                log.info("Network retrieved")
             except:
                 raise HydraPluginError("Network %s not found."%network_id)
 
@@ -182,6 +177,7 @@ if __name__ == '__main__':
         write_output("Starting App")
         write_progress(1, json_exporter.num_steps) 
 
+        import pudb; pudb.set_trace()
         validate_plugin_xml(os.path.join(__location__, 'plugin.xml'))
         
         json_exporter.as_xml = args.as_xml

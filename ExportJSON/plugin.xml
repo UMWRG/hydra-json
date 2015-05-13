@@ -55,5 +55,10 @@
         </arg>
     </non_mandatory_args> 
     <switches>
+        <arg>
+            <name>Export as XML</name>
+            <switch>-x</switch>
+            <help>Export as an XML file instead of a JSON file.</help>
+        </arg>
     </switches>
  </plugin_info>
