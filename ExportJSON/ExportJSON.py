@@ -52,10 +52,12 @@ Option                 Short  Parameter    Description
 import argparse as ap
 import logging
 
-from HydraLib import PluginLib
-from HydraLib.PluginLib import JsonConnection
 from HydraLib.HydraException import HydraPluginError
-from HydraLib.PluginLib import write_progress, write_output, validate_plugin_xml
+from HydraLib.PluginLib import JsonConnection,\
+                               create_xml_response,\
+                               write_progress,\
+                               write_output,\
+                               validate_plugin_xml
 import json
 import os, sys
 
@@ -71,27 +73,32 @@ class ExportJSON(object):
        Exporter of Hydra networks to JSON or XML files.
     """
 
-    Network = None
-    Scenario = None
-
     def __init__(self, url=None, session_id=None):
-
-        self.warnings = []
 
         #Record the names of the files created by the plugin so we can
         #display them to the user.
         self.files    = []
 
         self.connection = JsonConnection(url)
+        write_output("Connecting...")
         if session_id is not None:
-            log.info("Using existing session %s", session_id)
+            write_output("Using existing session %s", session_id)
             self.connection.session_id=session_id
         else:
             self.connection.login()
 
         self.num_steps = 6
 
-    def export(self, network_id, scenario_id, target_dir):
+    def export(self, network_id, scenario_id=None, target_dir=None):
+        """
+            Export the network to a file. Requires a network ID. The
+            other two are optional.
+
+            Scenario_id is None: Include all scenarios in the network
+            target_dir: Location of the resulting file. If this is None, export the file to the Desktop.
+
+        """
+
         write_output("Retrieving Network") 
         write_progress(2, self.num_steps) 
         if network_id is not None:
@@ -102,9 +109,9 @@ class ExportJSON(object):
                     network = self.connection.call('get_network', {'network_id':network_id})
                 else:
                     network = self.connection.call('get_network', {'network_id':network_id,
-                                                        'scenario_ids':[scenario_id]})
+                                                        'scenario_ids':[int(scenario_id)]})
 
-                log.info("Network retrieved")
+                write_output("Network retrieved")
             except:
                 raise HydraPluginError("Network %s not found."%network_id)
 
@@ -120,7 +127,7 @@ class ExportJSON(object):
         self.write_network(network, target_dir)
 
     def write_network(self, network, target_dir):
-        write_output("Exporting network")
+        write_output("Writing network to file")
         write_progress(3, self.num_steps) 
 
         if self.as_xml is False:
@@ -137,19 +144,16 @@ class ExportJSON(object):
             json_network = {'network': network}
             network_file.write(json2xml(json_network))
 
-        write_output("Network Exported")
+        write_output("Network Written to %s "%(target_dir))
 
 def commandline_parser():
     parser = ap.ArgumentParser(
         description="""Export a network in to a file in JSON format.
                     Written by Stephen Knox <stephen.knox@manchester.ac.uk>
                     (c) Copyright 2015, University of Manchester.
-        """, epilog="For more information visit www.hydraplatform.org",
-        formatter_class=ap.RawDescriptionHelpFormatter)
+        """, epilog="For more information visit www.hydraplatform.org")
     parser.add_argument('-n', '--network-id',
-                        help='''Specify the network_id of the network to be exported.
-                        If the network_id is not known, specify the network name. In
-                        this case, a project ID must also be provided''')
+                        help='''Specify the network_id of the network to be exported.''')
     parser.add_argument('-s', '--scenario-id',
                         help='''Specify the ID of the scenario to be exported. If no
                         scenario is specified, all scenarios in the network will be
@@ -192,11 +196,11 @@ if __name__ == '__main__':
         log.exception(e)
         errors = [e]
 
-    xml_response = PluginLib.create_xml_response('ExportJSON',
+    xml_response = create_xml_response('ExportJSON',
                                                  args.network_id,
                                                  [],
                                                  errors,
-                                                 json_exporter.warnings,
+                                                 [],
                                                  message,
                                                  json_exporter.files)
     print xml_response
