@@ -1,5 +1,5 @@
 <plugin_info>
-    <plugin_name>Import JSON Plugin</plugin_name>
+    <plugin_name>Import from JSON</plugin_name>
     <plugin_dir>ImportJSON.exe</plugin_dir>
     <plugin_description>Import a network saved in a JSON or XML file into Hydra.</plugin_description>
     <plugin_epilog>

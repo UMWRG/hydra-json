@@ -1,5 +1,5 @@
 # -*- mode: python -*-
-a = Analysis(['ExportCSV.py'],
+a = Analysis(['ExportJSON.py'],
              pathex=None,
              hiddenimports=[],
              hookspath=None,
@@ -9,7 +9,7 @@ pyz = PYZ(a.pure)
 exe = EXE(pyz,
           a.scripts,
           exclude_binaries=True,
-          name='ExportCSV.exe',
+          name='ExportJSON.exe',
           debug=False,
           strip=None,
           upx=True,
@@ -20,4 +20,4 @@ coll = COLLECT(exe,
                a.datas,
                strip=None,
                upx=True,
-               name='ExportCSV')
+               name='ExportJSON')

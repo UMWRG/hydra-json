@@ -82,12 +82,12 @@ class ExportJSON(object):
         self.connection = JsonConnection(url)
         write_output("Connecting...")
         if session_id is not None:
-            write_output("Using existing session %s", session_id)
+            write_output("Using existing session %s"% session_id)
             self.connection.session_id=session_id
         else:
             self.connection.login()
 
-        self.num_steps = 6
+        self.num_steps = 3
 
     def export(self, network_id, scenario_id=None, target_dir=None):
         """
