@@ -4,7 +4,7 @@ a = Analysis(['ExportJSON.py'],
              hiddenimports=[],
              hookspath=None,
              runtime_hooks=None,
-             excludes=['_tkinter', 'IPython'])
+             excludes=['_tkinter', 'IPython', 'pandas', 'numpy'])
 pyz = PYZ(a.pure)
 exe = EXE(pyz,
           a.scripts,
