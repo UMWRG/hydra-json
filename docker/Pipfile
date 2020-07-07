@@ -1,0 +1,14 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+hydra-json = {git = "https://github.com/UMWRG/hydra-json.git",ref = "master"}
+hydra-base = {git = "https://github.com/hydraplatform/hydra-base.git",ref = "master"}
+hydra-client-python = {git = "https://github.com/hydraplatform/hydra-client-python.git",ref = "master"}
+
+[requires]
+python_version = "3.6"
