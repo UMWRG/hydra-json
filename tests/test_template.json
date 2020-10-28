@@ -1,0 +1,61 @@
+{
+    "attributes": {
+        "-1": {
+            "name": "demand",
+            "dimension_id": null
+        },
+        "-2": {
+            "name": "outflow",
+            "dimension_id": null
+        }
+    },
+    "datasets": {},
+    "template": {
+        "cr_date": "2019-03-11 15:12:12",
+        "name": "Simple Template",
+        "layout": null,
+        "description": null,
+        "templatetypes": [
+            {
+                "name": "Simple Network",
+                "cr_date": "2019-03-11 15:12:12",
+                "resource_type": "NETWORK",
+                "description": null,
+                "typeattrs": [
+                ]
+            },
+            {
+                "name": "Demand",
+                "cr_date": "2019-03-11 15:12:12",
+                "resource_type": "NODE",
+                "description": null,
+                "id": 170,
+                "typeattrs": [
+                    {
+                        "data_type": "dataframe",
+                        "attr_id": -1,
+                        "attr_is_var": "N"
+                    }
+                ]
+            },
+            {
+                "name": "Supply",
+                "resource_type": "NODE",
+                "description": null,
+                "typeattrs": [
+                    {
+                        "data_type": "dataframe",
+                        "attr_id": -2,
+                        "attr_is_var": "N"
+                    }
+                ]
+            },
+            {
+                "alias": null,
+                "name": "edge",
+                "resource_type": "LINK",
+                "typeattrs": []
+            }
+        ]
+    }
+}

@@ -1,0 +1,336 @@
+{
+    "attributes": {
+        "-43": {
+            "name": "demand"
+        },
+        "-1112": {
+            "name": "outflow"
+        }
+    },
+    "network": {
+        "created_by": 2,
+        "cr_date": "2020-10-28 12:34:24",
+        "project_id": 111,
+        "layout": {},
+        "name": "Test1",
+        "projection": null,
+        "status": "A",
+        "description": "",
+        "id": 138,
+        "nodes": [
+            {
+                "id": -39066,
+                "network_id": 138,
+                "description": null,
+                "name": "Demand_1",
+                "status": "A",
+                "x": 14.4917,
+                "y": 25.4213,
+                "layout": null,
+                "cr_date": "2020-10-28 12:34:31",
+                "types": [
+                    {
+                        "template_id": 19,
+                        "id": 237,
+                        "template_name": "Simple Template",
+                        "layout": null,
+                        "name": "Demand",
+                        "child_template_id": 19
+                    }
+                ],
+                "attributes": [
+                    {
+                        "id": -343591,
+                        "ref_key": "NODE",
+                        "cr_date": "2020-10-28 12:34:31",
+                        "attr_is_var": "N",
+                        "node_id": 39066,
+                        "link_id": null,
+                        "group_id": null,
+                        "network_id": null,
+                        "attr_id": -43,
+                        "name": "demand",
+                        "dimension_id": null
+                    }
+                ]
+            },
+            {
+                "id": -39067,
+                "network_id": 138,
+                "description": null,
+                "name": "Supply_1",
+                "status": "A",
+                "x": 31.9423,
+                "y": 24.7191,
+                "layout": null,
+                "cr_date": "2020-10-28 12:34:33",
+                "types": [
+                    {
+                        "template_id": 19,
+                        "id": 238,
+                        "template_name": "Simple Template",
+                        "layout": null,
+                        "name": "Supply",
+                        "child_template_id": 19
+                    }
+                ],
+                "attributes": [
+                    {
+                        "id": -343592,
+                        "ref_key": "NODE",
+                        "cr_date": "2020-10-28 12:34:33",
+                        "attr_is_var": "N",
+                        "node_id": 39067,
+                        "link_id": null,
+                        "group_id": null,
+                        "network_id": null,
+                        "attr_id": -1112,
+                        "name": "outflow",
+                        "dimension_id": null
+                    }
+                ]
+            }
+        ],
+        "resourcegroups": [],
+        "scenarios": [
+            {
+                "id": 146,
+                "name": "Baseline",
+                "description": null,
+                "layout": null,
+                "status": "A",
+                "network_id": 138,
+                "start_time": null,
+                "end_time": null,
+                "locked": "N",
+                "time_step": null,
+                "cr_date": "2020-10-28 12:34:24",
+                "created_by": 2,
+                "parent_id": null,
+                "resourcescenarios": [
+                    {
+                        "resource_attr_id": -343591,
+                        "dataset": {
+                            "id": 70008,
+                            "type": "dataframe",
+                            "unit_id": null,
+                            "name": "demand",
+                            "hash": -53453242959691373,
+                            "cr_date": "2020-10-28 12:35:33",
+                            "created_by": 2,
+                            "hidden": "N",
+                            "value": "{\"demand\":{\"0\":null,\"1\":null,\"2\":null,\"\":null},\"\":{\"0\":null,\"1\":null,\"2\":null,\"\":null}}",
+                            "metadata": {}
+                        }
+                    },
+                    {
+                        "resource_attr_id": -343592,
+                        "dataset": {
+                            "id": 70009,
+                            "type": "dataframe",
+                            "unit_id": null,
+                            "name": "outflow",
+                            "hash": -7069142221219851148,
+                            "cr_date": "2020-10-28 12:40:07",
+                            "created_by": 2,
+                            "hidden": "N",
+                            "value": "{\"demand\":{\"0\":9,\"1\":9,\"2\":9}}",
+                            "metadata": {}
+                        }
+                    }
+                ],
+                "resourcegroupitems": []
+            },
+            {
+                "id": 147,
+                "name": "Surplus Supply",
+                "description": "",
+                "layout": null,
+                "status": "A",
+                "network_id": 138,
+                "start_time": null,
+                "end_time": null,
+                "locked": "N",
+                "time_step": null,
+                "cr_date": "2020-10-28 12:40:24",
+                "created_by": 2,
+                "parent_id": null,
+                "resourcescenarios": [
+                    {
+                        "resource_attr_id": -343591,
+                        "dataset": {
+                            "id": 70011,
+                            "type": "dataframe",
+                            "unit_id": null,
+                            "name": "demand",
+                            "hash": 3104550557368486048,
+                            "cr_date": "2020-10-28 12:40:52",
+                            "created_by": 2,
+                            "hidden": "N",
+                            "value": "{\"demand\":{\"0\":9,\"1\":9,\"2\":9}}",
+                            "metadata": {}
+                        }
+                    },
+                    {
+                        "resource_attr_id": -343592,
+                        "dataset": {
+                            "id": 70010,
+                            "type": "dataframe",
+                            "unit_id": null,
+                            "name": "outflow",
+                            "hash": 1718317464345321729,
+                            "cr_date": "2020-10-28 12:40:37",
+                            "created_by": 2,
+                            "hidden": "N",
+                            "value": "{\"demand\":{\"0\":10,\"1\":10,\"2\":10}}",
+                            "metadata": {}
+                        }
+                    }
+                ],
+                "resourcegroupitems": []
+            }
+        ],
+        "links": [
+            {
+                "id": -28133,
+                "network_id": 138,
+                "status": "A",
+                "node_1_id": -39067,
+                "node_2_id": -39066,
+                "name": "Supply_1 to Demand_1",
+                "description": null,
+                "layout": {
+                    "geojson": {
+                        "type": "LineString",
+                        "coordinates": []
+                    }
+                },
+                "cr_date": "2020-10-28 12:34:46",
+                "types": [
+                    {
+                        "template_id": 19,
+                        "id": 239,
+                        "template_name": "Simple Template",
+                        "layout": null,
+                        "name": "edge",
+                        "child_template_id": 19
+                    }
+                ],
+                "attributes": []
+            }
+        ],
+        "attributes": [
+            {
+                "id": -343587,
+                "ref_key": "NETWORK",
+                "cr_date": "2020-10-28 12:34:24",
+                "attr_is_var": "N",
+                "node_id": null,
+                "link_id": null,
+                "group_id": null,
+                "network_id": 138,
+                "attr_id": -1,
+                "name": "timestepper.start",
+                "dimension_id": null
+            },
+            {
+                "id": -343588,
+                "ref_key": "NETWORK",
+                "cr_date": "2020-10-28 12:34:24",
+                "attr_is_var": "N",
+                "node_id": null,
+                "link_id": null,
+                "group_id": null,
+                "network_id": 138,
+                "attr_id": -2,
+                "name": "timestepper.end",
+                "dimension_id": null
+            },
+            {
+                "id": -343589,
+                "ref_key": "NETWORK",
+                "cr_date": "2020-10-28 12:34:24",
+                "attr_is_var": "N",
+                "node_id": null,
+                "link_id": null,
+                "group_id": null,
+                "network_id": 138,
+                "attr_id": -3,
+                "name": "timestepper.timestep",
+                "dimension_id": null
+            },
+            {
+                "id": -343590,
+                "ref_key": "NETWORK",
+                "cr_date": "2020-10-28 12:34:24",
+                "attr_is_var": "N",
+                "node_id": null,
+                "link_id": null,
+                "group_id": null,
+                "network_id": 138,
+                "attr_id": -4,
+                "name": "simulated_flow",
+                "dimension_id": 14
+            }
+        ],
+        "types": [
+            {
+                "template_id": 1,
+                "id": 2,
+                "template_name": "Pywr HydroPower Simple",
+                "layout": {
+                    "shadow-attributes": "[]",
+                    "quick-attributes": "[]"
+                },
+                "name": "Pywr Hydropower",
+                "child_template_id": 19
+            },
+            {
+                "template_id": 1,
+                "id": 3,
+                "template_name": "Pywr HydroPower Simple",
+                "layout": {
+                    "shape": "star",
+                    "height": 15,
+                    "width": 15,
+                    "size": "medium",
+                    "color": "#000000",
+                    "hidden": "N"
+                },
+                "name": "output",
+                "child_template_id": 19
+            },
+            {
+                "template_id": 1,
+                "id": 6,
+                "template_name": "Pywr HydroPower Simple",
+                "layout": {
+                    "shape": "square",
+                    "height": 15,
+                    "width": 15,
+                    "size": "medium",
+                    "color": "#929000",
+                    "hidden": "N"
+                },
+                "name": "linearstoragereleasecontrol",
+                "child_template_id": 19
+            }
+        ],
+        "owners": [
+            {
+                "share": "Y",
+                "view": "Y",
+                "cr_date": "2020-10-28 12:34:24",
+                "user_id": 2,
+                "edit": "Y",
+                "network_id": 138,
+                "network": null
+            }
+        ]
+    },
+    "templates": [
+        "{\"attributes\": {\"-1\": {\"name\": \"timestepper.start\", \"dimension_id\": null}, \"-2\": {\"name\": \"timestepper.end\", \"dimension_id\": null}, \"-3\": {\"name\": \"timestepper.timestep\", \"dimension_id\": null}, \"-4\": {\"name\": \"simulated_flow\", \"dimension_id\": 14}}, \"datasets\": {}, \"template\": {\"name\": \"Pywr HydroPower Simple\", \"id\": 1, \"layout\": null, \"description\": null, \"parent_id\": null, \"cr_date\": \"2020-03-05 10:58:15\", \"templatetypes\": [{\"layout\": {\"linestyle\": \"solid\", \"width\": \"2\", \"color\": \"#000000\"}, \"alias\": null, \"description\": null, \"name\": \"edge\", \"parent_id\": null, \"cr_date\": \"2020-03-05 10:58:15\", \"status\": \"A\", \"resource_type\": \"LINK\", \"template_id\": 1, \"id\": 1, \"typeattrs\": []}, {\"layout\": {\"shadow-attributes\": \"[]\", \"quick-attributes\": \"[]\"}, \"alias\": null, \"description\": null, \"name\": \"Pywr Hydropower\", \"parent_id\": null, \"cr_date\": \"2020-03-05 10:58:15\", \"status\": \"A\", \"resource_type\": \"NETWORK\", \"template_id\": 1, \"id\": 2, \"typeattrs\": [{\"attr_id\": \"-1\", \"id\": 1, \"cr_date\": \"2020-03-05 10:58:15\", \"properties\": null, \"description\": null, \"data_restriction\": null, \"attr_is_var\": \"N\", \"type_id\": 2, \"parent_id\": null, \"status\": \"A\", \"unit_id\": null, \"data_type\": \"SCALAR\", \"default_dataset_id\": null, \"default_dataset\": null}, {\"attr_id\": \"-2\", \"id\": 3, \"cr_date\": \"2020-03-05 10:58:15\", \"properties\": null, \"description\": null, \"data_restriction\": null, \"attr_is_var\": \"N\", \"type_id\": 2, \"parent_id\": null, \"status\": \"A\", \"unit_id\": null, \"data_type\": \"SCALAR\", \"default_dataset_id\": null, \"default_dataset\": null}, {\"attr_id\": \"-3\", \"id\": 5, \"cr_date\": \"2020-03-05 10:58:15\", \"properties\": null, \"description\": null, \"data_restriction\": null, \"attr_is_var\": \"N\", \"type_id\": 2, \"parent_id\": null, \"status\": \"A\", \"unit_id\": null, \"data_type\": \"SCALAR\", \"default_dataset_id\": null, \"default_dataset\": null}]}, {\"layout\": {\"shape\": \"star\", \"height\": 15, \"width\": 15, \"size\": \"medium\", \"color\": \"#000000\", \"hidden\": \"N\"}, \"alias\": null, \"description\": null, \"name\": \"output\", \"parent_id\": null, \"cr_date\": \"2020-03-05 10:58:15\", \"status\": \"A\", \"resource_type\": \"NODE\", \"template_id\": 1, \"id\": 3, \"typeattrs\": [{\"attr_id\": \"-4\", \"id\": 7, \"cr_date\": \"2020-03-05 10:58:15\", \"properties\": null, \"description\": null, \"data_restriction\": null, \"attr_is_var\": \"N\", \"type_id\": 3, \"parent_id\": null, \"status\": \"A\", \"unit_id\": null, \"data_type\": \"SCALAR\", \"default_dataset_id\": null, \"default_dataset\": null}]}, {\"layout\": {\"shape\": \"circle\", \"height\": 15, \"width\": 15, \"size\": \"medium\", \"color\": \"black\", \"hidden\": \"N\"}, \"alias\": null, \"description\": null, \"name\": \"link\", \"parent_id\": null, \"cr_date\": \"2020-03-05 10:58:15\", \"status\": \"A\", \"resource_type\": \"NODE\", \"template_id\": 1, \"id\": 4, \"typeattrs\": [{\"attr_id\": \"-4\", \"id\": 8, \"cr_date\": \"2020-03-05 10:58:15\", \"properties\": null, \"description\": null, \"data_restriction\": null, \"attr_is_var\": \"N\", \"type_id\": 4, \"parent_id\": null, \"status\": \"A\", \"unit_id\": 150, \"data_type\": \"SCALAR\", \"default_dataset_id\": null, \"default_dataset\": null}]}, {\"layout\": {\"shape\": \"triangle\", \"height\": 20, \"width\": 20, \"size\": \"large\", \"color\": \"#0096ff\", \"hidden\": \"N\"}, \"alias\": null, \"description\": null, \"name\": \"reservoir\", \"parent_id\": null, \"cr_date\": \"2020-03-05 10:58:15\", \"status\": \"A\", \"resource_type\": \"NODE\", \"template_id\": 1, \"id\": 5, \"typeattrs\": []}, {\"layout\": {\"shape\": \"square\", \"height\": 15, \"width\": 15, \"size\": \"medium\", \"color\": \"#929000\", \"hidden\": \"N\"}, \"alias\": null, \"description\": null, \"name\": \"linearstoragereleasecontrol\", \"parent_id\": null, \"cr_date\": \"2020-03-05 10:58:15\", \"status\": \"A\", \"resource_type\": \"NODE\", \"template_id\": 1, \"id\": 6, \"typeattrs\": []}, {\"layout\": {\"shape\": \"cross\", \"height\": 15, \"width\": 15, \"size\": \"medium\", \"color\": \"#00fcff\", \"hidden\": \"N\"}, \"alias\": null, \"description\": null, \"name\": \"turbine\", \"parent_id\": null, \"cr_date\": \"2020-03-05 10:58:15\", \"status\": \"A\", \"resource_type\": \"NODE\", \"template_id\": 1, \"id\": 7, \"typeattrs\": [{\"attr_id\": \"-4\", \"id\": 10, \"cr_date\": \"2020-03-05 10:58:15\", \"properties\": null, \"description\": null, \"data_restriction\": null, \"attr_is_var\": \"N\", \"type_id\": 7, \"parent_id\": null, \"status\": \"A\", \"unit_id\": null, \"data_type\": \"SCALAR\", \"default_dataset_id\": null, \"default_dataset\": null}]}, {\"layout\": {\"shape\": \"circle\", \"height\": 15, \"width\": 15, \"size\": \"medium\", \"color\": \"#008e00\", \"hidden\": \"N\"}, \"alias\": null, \"description\": null, \"name\": \"monthlycatchment\", \"parent_id\": null, \"cr_date\": \"2020-03-05 10:58:15\", \"status\": \"A\", \"resource_type\": \"NODE\", \"template_id\": 1, \"id\": 8, \"typeattrs\": [{\"attr_id\": \"-4\", \"id\": 11, \"cr_date\": \"2020-03-05 10:58:15\", \"properties\": null, \"description\": null, \"data_restriction\": null, \"attr_is_var\": \"N\", \"type_id\": 8, \"parent_id\": null, \"status\": \"A\", \"unit_id\": 162, \"data_type\": \"SCALAR\", \"default_dataset_id\": null, \"default_dataset\": null}]}, {\"layout\": {\"shape\": \"circle\", \"height\": 15, \"width\": 15, \"size\": \"medium\", \"color\": \"#ff9300\", \"hidden\": \"N\"}, \"alias\": null, \"description\": null, \"name\": \"monthlyoutput\", \"parent_id\": null, \"cr_date\": \"2020-03-05 10:58:15\", \"status\": \"A\", \"resource_type\": \"NODE\", \"template_id\": 1, \"id\": 9, \"typeattrs\": [{\"attr_id\": \"-4\", \"id\": 12, \"cr_date\": \"2020-03-05 10:58:15\", \"properties\": null, \"description\": null, \"data_restriction\": null, \"attr_is_var\": \"N\", \"type_id\": 9, \"parent_id\": null, \"status\": \"A\", \"unit_id\": null, \"data_type\": \"SCALAR\", \"default_dataset_id\": null, \"default_dataset\": null}]}, {\"layout\": {\"shape\": \"diamond\", \"height\": 15, \"width\": 15, \"size\": \"medium\", \"color\": \"#521b92\", \"hidden\": \"N\"}, \"alias\": null, \"description\": null, \"name\": \"proportionalinput\", \"parent_id\": null, \"cr_date\": \"2020-03-05 10:58:15\", \"status\": \"A\", \"resource_type\": \"NODE\", \"template_id\": 1, \"id\": 10, \"typeattrs\": [{\"attr_id\": \"-4\", \"id\": 13, \"cr_date\": \"2020-03-05 10:58:15\", \"properties\": null, \"description\": null, \"data_restriction\": null, \"attr_is_var\": \"N\", \"type_id\": 10, \"parent_id\": null, \"status\": \"A\", \"unit_id\": null, \"data_type\": \"SCALAR\", \"default_dataset_id\": null, \"default_dataset\": null}]}, {\"layout\": {\"linestyle\": \"dashed\", \"width\": \"2\", \"color\": \"#000000\"}, \"alias\": null, \"description\": null, \"name\": \"return_flow\", \"parent_id\": null, \"cr_date\": \"2020-03-05 10:58:15\", \"status\": \"A\", \"resource_type\": \"LINK\", \"template_id\": 1, \"id\": 11, \"typeattrs\": []}]}}"
+    ],
+    "rules": [],
+    "metrics": []
+}
