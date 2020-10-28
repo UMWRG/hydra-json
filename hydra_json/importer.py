@@ -81,7 +81,8 @@ class ImportJSON:
         """
             Import a template file
         """
-        self.client.import_template_json(template_file)
+        template = self.client.import_template_json(template_file)
+        return template.id
 
     def create_project(self, network):
         """
@@ -110,41 +111,3 @@ class ImportJSON:
         )
         saved_project = self.client.call('add_project', {'project':new_project})
         return saved_project
-
-
-
-def run():
-    parser = commandline_parser()
-    args = parser.parse_args()
-    json_importer = ImportJSON(url=args.server_url, session_id=args.session_id)
-    network_id = None
-    scenarios = []
-    errors = []
-    try:
-        write_progress(1, json_importer.num_steps)
-
-        net = json_importer.import_network(args.network)
-        scenarios = [s.id for s in net.scenarios]
-        network_id = net.id
-        message = "Import complete"
-    except HydraPluginError as e:
-        message="An error has occurred"
-        errors = [e.message]
-        log.exception(e)
-    except Exception as e:
-        message="An error has occurred"
-        log.exception(e)
-        errors = [e]
-
-    xml_response = PluginLib.create_xml_response('ImportJSON',
-                                                 network_id,
-                                                 scenarios,
-                                                 errors,
-                                                 json_importer.warnings,
-                                                 message,
-                                                 json_importer.files)
-    print (xml_response)
-
-if __name__ == '__main__':
-    run()
-

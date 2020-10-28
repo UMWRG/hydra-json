@@ -4,5 +4,5 @@ IMG	:= ${NAME}:${TAG}
 LATEST := ${NAME}:latest
 
 build:
-	@docker build -t ${IMG} .
+	@docker build --force -t ${IMG} .
 	@docker tag ${IMG} ${LATEST}
