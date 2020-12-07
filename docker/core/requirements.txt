@@ -1,0 +1,14 @@
+numpy
+click
+bcrypt
+beaker
+cheroot
+lxml
+mysqlclient
+psycopg2-binary
+packaging
+sqlalchemy
+zope.sqlalchemy>=0.4
+suds-jurko
+pandas
+requests

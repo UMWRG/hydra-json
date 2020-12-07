@@ -1,4 +1,4 @@
-NAME := umwrg/hydra-json
+NAME := umwrg/hydra-json-core
 TAG	:= $$(git rev-parse --short=8 HEAD)
 IMG	:= ${NAME}:${TAG}
 LATEST := ${NAME}:latest
