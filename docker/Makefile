@@ -4,5 +4,5 @@ IMG	:= ${NAME}:${TAG}
 LATEST := ${NAME}:latest
 
 build:
-	@docker build -t ${IMG} .
+	@docker build -t ${IMG} . --no-cache
 	@docker tag ${IMG} ${LATEST}
