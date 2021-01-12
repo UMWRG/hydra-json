@@ -85,6 +85,8 @@ class ExportJSON:
         """
             For a given resource, extract the attributes from it.
         """
+        #why is this not already a JSON Objject??
+        resource.attributes = [JSONObject(a) for a in resource.attributes]
         for res_attr in resource.attributes:
             res_attr.id = res_attr.id * -1
             res_attr.attr_id = res_attr.attr_id * -1
@@ -119,13 +121,13 @@ class ExportJSON:
                                        include_data=True,
                                        include_results=include_results)
 
-        templates_used = []
+        network_templates = []
 
         if network_j.types is not None and len(network_j.types) > 0:
             template_id = network_j.types[0].template_id
 
             tmpl = client.get_template_as_json(template_id=template_id)
-            templates_used.append(tmpl)
+            network_templates.append(tmpl)
 
         self.update_attributes(network_j)
 
@@ -150,7 +152,7 @@ class ExportJSON:
                 new_rs = JSONObject({})
                 new_rs.resource_attr_id = r_s.resource_attr_id * -1
                 dataset = r_s.dataset
-                new_rs.dataset = dataset
+                new_rs.dataset = JSONObject(dataset)
                 scenario.resourcescenarios_1.append(new_rs)
 
             scenario.resourcescenarios = scenario.resourcescenarios_1
@@ -170,14 +172,14 @@ class ExportJSON:
                                           ref_id=network_j.id)
 
 
-        output_data = {'attributes': attr_dict,
+        output_data = {'attributes': self.attr_dict,
                        'network': network_j,
-                       'templates': templates_used,
+                       'templates': network_templates,
                        'rules': rules}
 
         additional_data = self.get_additional_data()
 
-        output_data = output_data.update(additional_data)
+        output_data.update(additional_data)
 
         dump_kwargs = {}
         if newlines is True:

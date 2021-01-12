@@ -3,6 +3,9 @@ from hydra_json import ImportJSON, ExportJSON
 
 from hydra_client.connection import JSONConnection, RemoteJSONConnection
 
+global APP_NAME
+APP_NAME='hydra-json'
+
 def hydra_app(category='import'):
     def hydra_app_decorator(func):
         func.hydra_app_category = category
@@ -55,16 +58,16 @@ def start_cli():
 @click.pass_obj
 @click.option('-n', '--network-id',  required=True, type=int, help='''ID of the network that will be exported.''')
 @click.option('-s', '--scenario-id', required=True, type=int, help='''ID of the scenario that will be exported.''')
-@click.option('-d', '--target-dir',  required=True, type=int, help='''Target Directory''')
+@click.option('-d', '--data-dir',  required=True, type=str, help='''Target Directory''')
 @click.option('--user-id', type=int, default=None)
-def export(obj, network_id, scenario_id, target_dir, user_id):
+def export(obj, network_id, scenario_id, data_dir, user_id):
 
 
     client = get_logged_in_client(obj, user_id=user_id)
 
     json_exporter = ExportJSON(client)
 
-    json_exporter.export_network(network_id, scenario_id, target_dir)
+    json_exporter.export_network(network_id, scenario_id, data_dir)
 
 @hydra_app(category='import')
 @cli.command(name='import')
@@ -72,14 +75,15 @@ def export(obj, network_id, scenario_id, target_dir, user_id):
 @click.option('-f', '--network-file', required=True, help='''Path to the network file''')
 @click.option('-t', '--template-id', required=True, type=int, help='''ID of the template that matches the network''')
 @click.option('-p', '--project-id', required=True, type=int, help='''ID of the project to place the network''')
+@click.option('--network-name', required=False, type=str, help='''Optional network name, rather than using the one in the file''')
 @click.option('--user-id', type=int, default=None)
-def import_network(obj, network_file, template_id, project_id, user_id):
+def import_network(obj, network_file, template_id, project_id, network_name=None, user_id=None):
 
     client = get_logged_in_client(obj, user_id=user_id)
 
     json_importer = ImportJSON(client)
 
-    json_importer.import_network(network_file, template_id, project_id)
+    json_importer.import_network(network_file, template_id, project_id, network_name=network_name)
 
 @hydra_app(category='import_template')
 @cli.command(name='import-template')
