@@ -81,6 +81,22 @@ class ExportJSON:
         #A lookup from attr_id to attribute object
         self.attr_dict = {}
 
+        self.dimension_lookup = {}
+
+    def get_dimension_name(self, dimension_id):
+        """
+            Get the name of the dimension with the given ID
+        """
+        if dimension_id is None:
+            return None
+        dimension = self.dimension_lookup.get(dimension_id)
+        if dimension is None:
+            dimension = self.client.get_dimension(dimension_id)
+            self.dimension_lookup[dimension.id] = dimension
+
+        return dimension.name
+
+
     def update_attributes(self, resource):
         """
             For a given resource, extract the attributes from it.
@@ -91,7 +107,8 @@ class ExportJSON:
             res_attr.id = res_attr.id * -1
             res_attr.attr_id = res_attr.attr_id * -1
             self.attr_dict[res_attr.attr_id] = JSONObject(
-                {'name': res_attr.name, 'dimension':res_attr.dimension})
+                {'name': res_attr.name,
+                 'dimension':self.get_dimension_name(res_attr.dimension_id)})
 
 
     def export_network(self, network_id, scenario_id=None, target_dir=None,

@@ -57,17 +57,23 @@ def start_cli():
 @cli.command(name='export')
 @click.pass_obj
 @click.option('-n', '--network-id',  required=True, type=int, help='''ID of the network that will be exported.''')
-@click.option('-s', '--scenario-id', required=True, type=int, help='''ID of the scenario that will be exported.''')
+@click.option('-s', '--scenario-id', required=False, default=None, type=int, help='''ID of the scenario that will be exported.''')
 @click.option('-d', '--data-dir',  required=True, type=str, help='''Target Directory''')
 @click.option('--user-id', type=int, default=None)
-def export(obj, network_id, scenario_id, data_dir, user_id):
+@click.option('--newlines', is_flag=True, type=str, help='''Add New Lines?''')
+@click.option('--zipped',  is_flag=True, type=str, default=False, help='''Zip the file (reduces file size)''')
+@click.option('--exclude-results', is_flag=True, default=False, type=str, help='''Exclude Results (increases speed and reduces file size)''')
+def export(obj, network_id, scenario_id, data_dir, user_id, newlines, zipped, exclude_results):
 
 
     client = get_logged_in_client(obj, user_id=user_id)
 
     json_exporter = ExportJSON(client)
 
-    json_exporter.export_network(network_id, scenario_id, data_dir)
+    include_results = not exclude_results
+
+    json_exporter.export_network(network_id, scenario_id=scenario_id, target_dir=data_dir,
+                                newlines=newlines, zipped=zipped, include_results=include_results)
 
 @hydra_app(category='import')
 @cli.command(name='import')
@@ -77,7 +83,8 @@ def export(obj, network_id, scenario_id, data_dir, user_id):
 @click.option('-p', '--project-id', required=True, type=int, help='''ID of the project to place the network''')
 @click.option('--network-name', required=False, type=str, help='''Optional network name, rather than using the one in the file''')
 @click.option('--user-id', type=int, default=None)
-def import_network(obj, network_file, template_id, project_id, network_name=None, user_id=None):
+@click.option('-d', '--data-dir',  required=True, type=str, help='''Target Directory''')
+def import_network(obj, network_file, template_id, project_id, network_name=None, user_id=None, data_dir=None):
 
     client = get_logged_in_client(obj, user_id=user_id)
 

@@ -29,6 +29,7 @@ import json
 import os, sys
 
 from datetime import datetime
+import hydra_pywr_common
 
 log = logging.getLogger(__name__)
 
@@ -173,7 +174,7 @@ class ImportJSON:
             #Attribute not in the DB?
             if attr_name_id_lookup.get((attr_j.name.lower().strip(), attr_j.dimension_id)) is None:
                 #Add it
-                newattr = self.client.add_attr(attr_j)
+                newattr = self.client.add_attribute(attr_j)
                 #Add it to the name/dimension -> lookup
                 attr_name_id_lookup[(newattr.name.lower().strip(), newattr.dimension_id)] = newattr.id
 
