@@ -54,7 +54,10 @@ def start_cli():
     cli(obj={}, auto_envvar_prefix='HYDRA_JSON')
 
 @hydra_app(category='export')
-@cli.command(name='export')
+@cli.command(name='export',
+             context_settings=dict(
+             ignore_unknown_options=True,
+             allow_extra_args=True))
 @click.pass_obj
 @click.option('-n', '--network-id',  required=True, type=int, help='''ID of the network that will be exported.''')
 @click.option('-s', '--scenario-id', required=False, default=None, type=int, help='''ID of the scenario that will be exported.''')
@@ -76,14 +79,17 @@ def export(obj, network_id, scenario_id, data_dir, user_id, newlines, zipped, ex
                                 newlines=newlines, zipped=zipped, include_results=include_results)
 
 @hydra_app(category='import')
-@cli.command(name='import')
+@cli.command(name='import', 
+             context_settings=dict(
+             ignore_unknown_options=True,
+             allow_extra_args=True))
 @click.pass_obj
 @click.option('-f', '--network-file', required=True, help='''Path to the network file''')
 @click.option('-t', '--template-id', required=True, type=int, help='''ID of the template that matches the network''')
 @click.option('-p', '--project-id', required=True, type=int, help='''ID of the project to place the network''')
 @click.option('--network-name', required=False, type=str, help='''Optional network name, rather than using the one in the file''')
 @click.option('--user-id', type=int, default=None)
-@click.option('-d', '--data-dir',  required=True, type=str, help='''Target Directory''')
+@click.option('-d', '--data-dir',  required=True, type=str, default='/tmp', help='''Target Directory''')
 def import_network(obj, network_file, template_id, project_id, network_name=None, user_id=None, data_dir=None):
 
     client = get_logged_in_client(obj, user_id=user_id)
@@ -93,7 +99,10 @@ def import_network(obj, network_file, template_id, project_id, network_name=None
     json_importer.import_network(network_file, template_id, project_id, network_name=network_name)
 
 @hydra_app(category='import_template')
-@cli.command(name='import-template')
+@cli.command(name='import-template',
+             context_settings=dict(
+             ignore_unknown_options=True,
+             allow_extra_args=True))
 @click.pass_obj
 @click.option('-f', '--template-file', required=True, help='''Path to the templlate file''')
 @click.option('--user-id', type=int, default=None)

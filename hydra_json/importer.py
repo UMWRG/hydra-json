@@ -18,6 +18,8 @@
 
 import argparse as ap
 import logging
+import zipfile
+import tempfile
 
 from hydra_client.output import write_progress, write_output, create_xml_response
 from hydra_client import RequestError
@@ -52,7 +54,7 @@ class ImportJSON:
         self.new_network = None
         self.input_network = None
         self.attr_negid_posid_lookup = {}
-        self.type_name_id_map = {}
+        self.type_id_map = {} # a mapping from a type ID to a type object
         self.name_maps = {'NODE': {}, 'LINK': {}, 'GROUP': {}}
 
         #3 steps: start, read, save
@@ -68,6 +70,17 @@ class ImportJSON:
         write_progress(2, self.num_steps)
 
         if network is not None:
+
+            if zipfile.is_zipfile(network):
+                self.log.info("File is zipped...extracting..")
+                tmp_folder = tempfile.mkdtemp()
+                zip_ref = zipfile.ZipFile(network, 'r')
+                zip_ref.extractall(tmp_folder)
+                zip_ref.close()
+
+                # Looking inside the extracted folder for the file to import. Navigating eventual subfolders tree to the json file
+                network = self.get_network_file_name(tmp_folder, {})
+
             with open(network, 'r') as netfile:
                 json_data = json.load(netfile)
 
@@ -192,7 +205,7 @@ class ImportJSON:
         """
         if (len(resource_j.types)>0):
             # If the node has type
-            resource_j.types[0].id = self.type_name_id_map[resource_j.types[0].name]
+            resource_j.types = [self.type_id_map[resource_j.types[0].name]]
 
         #Replace the attr_id for each resource attribute with the DB's correct ID
         for ra_j in resource_j.attributes:
@@ -208,7 +221,7 @@ class ImportJSON:
 
         if len(self.input_network.types)>0:
             # If the network has type
-            self.input_network.types[0].id = self.type_name_id_map[self.input_network.types[0].name]
+            self.input_network.types = [self.type_id_map[self.input_network.types[0].name]]
 
         #map the name of the nodes, links and groups to its negative ID
         for n_j in self.input_network.nodes:
@@ -239,7 +252,7 @@ class ImportJSON:
             log.info("Template %s is not found", self.input_network.types[0].template_name)
             return
         for t in template.templatetypes:
-            self.type_name_id_map[t.name] = t.id
+            self.type_id_map[t.name] = t
 
     def create_reverse_id_lookups(self):
         """
@@ -289,5 +302,26 @@ class ImportJSON:
 
             self.client.add_rule(JSONObject(r))
 
+
+    def get_network_file_name(self, base_path, not_valid_filenames):
+        # Starting from the passed path, finds the first valid file and return its path
+        foldercontents = os.listdir(base_path)
+
+        #Remove any hidden files
+        visible_files = []
+        for f in foldercontents:
+            if f[0] != '.' and f[0] != '_' and f not in not_valid_filenames:
+                # We cannot add the just unzipped FILE!
+                visible_files.append(f)
+
+        last_file = visible_files[-1] #This ensures you ignore hidden files.
+
+        data_dir = os.path.join(base_path, last_file)
+
+        if os.path.isdir(data_dir):
+            # If it is a folder, navigate inside
+            data_dir = self.get_network_file_name(data_dir, not_valid_filenames)
+
+        return data_dir
 
 
