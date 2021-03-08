@@ -72,7 +72,7 @@ class ImportJSON:
         if network is not None:
 
             if zipfile.is_zipfile(network):
-                self.log.info("File is zipped...extracting..")
+                log.info("File is zipped...extracting..")
                 tmp_folder = tempfile.mkdtemp()
                 zip_ref = zipfile.ZipFile(network, 'r')
                 zip_ref.extractall(tmp_folder)
