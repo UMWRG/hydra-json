@@ -57,6 +57,11 @@ class ImportJSON:
         self.type_id_map = {} # a mapping from a type ID to a type object
         self.name_maps = {'NODE': {}, 'LINK': {}, 'GROUP': {}}
 
+        #This is a special case to cater for the fact that the NAME of a network type
+        #often changes from one template to another, even when then node type names
+        #remain the same.
+        self.network_template_type = None
+
         #3 steps: start, read, save
         self.num_steps = 3
 
@@ -101,8 +106,14 @@ class ImportJSON:
 
             self.input_network.project_id = project_id
 
+            if template_id is None:
+                raise HydraError("Please specifiy a template")
+
+            self.template_id = template_id
+
             if network_name:
                 self.input_network.name = network_name
+
 
             #make all the negative type and attribute IDs into positive ones from the DB
             self.update_type_and_attribute_ids()
@@ -221,7 +232,7 @@ class ImportJSON:
 
         if len(self.input_network.types)>0:
             # If the network has type
-            self.input_network.types = [self.type_id_map[self.input_network.types[0].name]]
+            self.input_network.types = [self.network_template_type]
 
         #map the name of the nodes, links and groups to its negative ID
         for n_j in self.input_network.nodes:
@@ -247,11 +258,13 @@ class ImportJSON:
             log.info("Network %s has no type", self.input_network.name)
             return
 
-        template = self.client.get_template_by_name(self.input_network.types[0].template_name)
+        template = self.client.get_template(self.template_id)
         if template is None:
-            log.info("Template %s is not found", self.input_network.types[0].template_name)
+            log.info("Template %s is not found", self.template_id)
             return
         for t in template.templatetypes:
+            if t.resource_type == 'NETWORK':
+                self.network_template_type = t
             self.type_id_map[t.name] = t
 
     def create_reverse_id_lookups(self):
