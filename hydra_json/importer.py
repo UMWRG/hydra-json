@@ -97,8 +97,18 @@ class ImportJSON:
             else:
                 json_data['network']['project_id'] = project_id
 
-            self.make_attribute_id_mapping(json_data.get('attributes', []))
 
+            if template_id is None:
+                raise HydraPluginError("Please specifiy a template")
+            self.template_id = template_id
+            self.get_template()
+
+            #a mapping from attr ID to unit ID
+            self.attr_id_unit_id_lookup = {}
+            #a mapping from resource attr ID to unit id
+            self.ra_id_unit_id_lookup = {}
+
+            self.make_attribute_id_mapping(json_data.get('attributes', []))
 
             #Replace the attr_id for each resource attribute with the DB's correct ID
             for ra_j in self.input_network.attributes:
@@ -106,17 +116,19 @@ class ImportJSON:
 
             self.input_network.project_id = project_id
 
-            if template_id is None:
-                raise HydraError("Please specifiy a template")
-
-            self.template_id = template_id
 
             if network_name:
                 self.input_network.name = network_name
 
+            #a mapping from a resource_attr_id to an RS in scenario [0]
+            self.rs_lookup = {}
+            self.make_rs_lookup()
+            
 
             #make all the negative type and attribute IDs into positive ones from the DB
             self.update_type_and_attribute_ids()
+
+            self.update_units()
 
             write_output("Saving Network")
             write_progress(3, self.num_steps)
@@ -131,6 +143,19 @@ class ImportJSON:
         else:
             raise HydraPluginError("A network ID must be specified!")
         return network
+
+
+    def get_template(self):
+        self.template = self.client.get_template(self.template_id)
+    
+    def make_rs_lookup(self):
+        if self.input_network.get('scenarios') is None:
+            return
+        if len(self.input_network['scenarios']) == 0:
+            return
+
+        for rs in self.input_network['scenarios'][0].get('resourcescenarios', []):
+            self.rs_lookup[rs.resource_attr_id] = rs
 
     def import_template(self, template_file):
         """
@@ -180,8 +205,18 @@ class ImportJSON:
 
         #Map a name/dimension combo to a positive DB id
         attr_name_id_lookup = {}
+        attr_id_lookup = {}
         for a in all_attributes:
             attr_name_id_lookup[(a.name.lower().strip(), a.dimension_id)] = a.id
+            attr_id_lookup[a.id] = a
+
+        typeattrs_name_lookup = {}
+        for tt in self.template.templatetypes:
+            for ta in tt.typeattrs:
+                attr = attr_id_lookup[ta.attr_id]
+                if ta.unit_id is not None:
+                    self.attr_id_unit_id_lookup[ta.attr_id] = ta.unit_id
+                typeattrs_name_lookup[attr.name] = attr
 
         dimensions = self.client.get_dimensions()
         dimension_map = {d.name.lower(): d.id for d in dimensions}
@@ -189,22 +224,31 @@ class ImportJSON:
         #Map the file's negative attr_id to the DB's positive ID
         for neg_id in json_attributes:
             attr_j = JSONObject(json_attributes[neg_id])
-
             if attr_j.dimension is None or attr_j.dimension.strip() == '':
                 attr_j.dimension_id = None
             else:
                 attr_j.dimension_id = dimension_map[attr_j.dimension.lower()]
 
-            #Attribute not in the DB?
-            if attr_name_id_lookup.get((attr_j.name.lower().strip(), attr_j.dimension_id)) is None:
+            #an attribute with the same name is in the template? use that.
+            if attr_j.name in typeattrs_name_lookup:
+                db_attr = typeattrs_name_lookup[attr_j.name]
+                attr_j = db_attr
+                #Add it to the name/dimension -> lookup
+                attr_name_id_lookup[(db_attr.name.lower().strip(), db_attr.dimension_id)] = db_attr.id
+            elif attr_name_id_lookup.get((attr_j.name.lower().strip(), attr_j.dimension_id)) is None:
+
+                #Attribute not in the DB?
                 #Add it
                 newattr = self.client.add_attribute(attr_j)
                 #Add it to the name/dimension -> lookup
                 attr_name_id_lookup[(newattr.name.lower().strip(), newattr.dimension_id)] = newattr.id
 
+            key = (attr_j.name.lower().strip(), attr_j.dimension_id)
+
             #Add the id to the negative id -> positive id map
             self.attr_negid_posid_lookup[int(neg_id)] = attr_name_id_lookup[(attr_j.name.lower().strip(),
                                                                              attr_j.dimension_id)]
+
 
     def update_type_and_attribute(self, resource_j):
         """
@@ -219,8 +263,44 @@ class ImportJSON:
             resource_j.types = [self.type_id_map[resource_j.types[0].name]]
 
         #Replace the attr_id for each resource attribute with the DB's correct ID
+        attr_ids = []
+        attr_lookup = {}
+        dupe_removed_attrs = {} # the new resources' attributes, but with any dupes removed
         for ra_j in resource_j.attributes:
-            ra_j.attr_id = self.attr_negid_posid_lookup[ra_j.attr_id]
+            attr_id = self.attr_negid_posid_lookup[ra_j.attr_id]
+            #we have seen this attr id before, suggesting it's a dupe, so ignore it
+            if attr_id in attr_ids:
+                #is there any data associated to this RA?
+                if self.rs_lookup.get(ra_j.id) is not None:
+                    #yes, so find the RA that we're actually using, and set it on the RS so it is pointing to 
+                    #something that'll actually be in the network
+                    replacement_ra_id = dupe_removed_attrs[attr_id]['id']
+                    if self.rs_lookup.get(replacement_ra_id):
+                        #there's data on both RAs, so err on the side of caution and leave the dupe in
+                        raise HydraPluginError(f"A duplicate attribute has been found for {ra_j.name} on {resource_j.name}.\n"+
+                                f"Delete one of the resource scenario {ra_j.id} or {dupe_removed_attrs[attr_id].id}")
+                    else:
+                        self.rs_lookup[ra_j.id]['resource_attr_id'] = dupe_removed_attrs[attr_id]['id']
+                continue # this is a dupe we can remove, so ignore it.
+            ra_j.attr_id = attr_id
+            dupe_removed_attrs[attr_id] = ra_j
+            attr_ids.append(attr_id)
+            if self.attr_id_unit_id_lookup.get(attr_id):
+                self.ra_id_unit_id_lookup[ra_j.id] = self.attr_id_unit_id_lookup[attr_id]
+
+        resource_j.attributes = list(dupe_removed_attrs.values())
+
+    def update_units(self):
+        """
+        go through the dataset on each RS and set its unit, if it is unset, and if a unit is available on the
+        associated type attribute
+        """
+
+        for s in self.input_network.get('scenarios', []):
+            for rs in s.get("resourcescenarios", []):
+                if rs.dataset.unit_id is None and self.ra_id_unit_id_lookup.get(rs.resource_attr_id) is not None:
+                    rs.dataset.unit_id = self.ra_id_unit_id_lookup[rs.resource_attr_id]
+            
 
     def update_type_and_attribute_ids(self):
         """
@@ -258,11 +338,10 @@ class ImportJSON:
             log.info("Network %s has no type", self.input_network.name)
             return
 
-        template = self.client.get_template(self.template_id)
-        if template is None:
+        if self.template is None:
             log.info("Template %s is not found", self.template_id)
             return
-        for t in template.templatetypes:
+        for t in self.template.templatetypes:
             if t.resource_type == 'NETWORK':
                 self.network_template_type = t
             self.type_id_map[t.name] = t

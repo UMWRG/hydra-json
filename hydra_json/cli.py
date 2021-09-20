@@ -61,7 +61,7 @@ def start_cli():
 @click.pass_obj
 @click.option('-n', '--network-id',  required=True, type=int, help='''ID of the network that will be exported.''')
 @click.option('-s', '--scenario-id', required=False, default=None, type=int, help='''ID of the scenario that will be exported.''')
-@click.option('-d', '--data-dir',  required=True, type=str, help='''Target Directory''')
+@click.option('-d', '--data-dir',  required=True, type=str, help='''Target Directory''', default='/tmp')
 @click.option('--user-id', type=int, default=None)
 @click.option('--newlines', is_flag=True, type=str, help='''Add New Lines?''')
 @click.option('--zipped',  is_flag=True, type=str, default=False, help='''Zip the file (reduces file size)''')
@@ -79,7 +79,7 @@ def export(obj, network_id, scenario_id, data_dir, user_id, newlines, zipped, ex
                                 newlines=newlines, zipped=zipped, include_results=include_results)
 
 @hydra_app(category='import')
-@cli.command(name='import', 
+@cli.command(name='import',
              context_settings=dict(
              ignore_unknown_options=True,
              allow_extra_args=True))
