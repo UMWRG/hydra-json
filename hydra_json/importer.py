@@ -31,7 +31,6 @@ import json
 import os, sys
 
 from datetime import datetime
-import hydra_pywr_common
 
 log = logging.getLogger(__name__)
 
@@ -123,7 +122,7 @@ class ImportJSON:
             #a mapping from a resource_attr_id to an RS in scenario [0]
             self.rs_lookup = {}
             self.make_rs_lookup()
-            
+
 
             #make all the negative type and attribute IDs into positive ones from the DB
             self.update_type_and_attribute_ids()
@@ -147,7 +146,7 @@ class ImportJSON:
 
     def get_template(self):
         self.template = self.client.get_template(self.template_id)
-    
+
     def make_rs_lookup(self):
         if self.input_network.get('scenarios') is None:
             return
@@ -272,7 +271,7 @@ class ImportJSON:
             if attr_id in attr_ids:
                 #is there any data associated to this RA?
                 if self.rs_lookup.get(ra_j.id) is not None:
-                    #yes, so find the RA that we're actually using, and set it on the RS so it is pointing to 
+                    #yes, so find the RA that we're actually using, and set it on the RS so it is pointing to
                     #something that'll actually be in the network
                     replacement_ra_id = dupe_removed_attrs[attr_id]['id']
                     if self.rs_lookup.get(replacement_ra_id):
@@ -300,7 +299,7 @@ class ImportJSON:
             for rs in s.get("resourcescenarios", []):
                 if rs.dataset.unit_id is None and self.ra_id_unit_id_lookup.get(rs.resource_attr_id) is not None:
                     rs.dataset.unit_id = self.ra_id_unit_id_lookup[rs.resource_attr_id]
-            
+
 
     def update_type_and_attribute_ids(self):
         """
