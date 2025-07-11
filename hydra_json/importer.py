@@ -22,8 +22,7 @@ import zipfile
 import tempfile
 
 from hydra_client.output import write_progress, write_output
-from hydra_client import RequestError
-from hydra_client import HydraPluginError
+from hydra_client import RequestError, HydraClientError
 from hydra_client.objects import ExtendedDict
 
 import json
@@ -98,7 +97,7 @@ class ImportJSON:
 
 
             if template_id is None:
-                raise HydraPluginError("Please specifiy a template")
+                raise HydraClientError("Please specifiy a template")
             self.template_id = template_id
             self.get_template()
 
@@ -140,7 +139,7 @@ class ImportJSON:
             write_output(f"Network {self.new_network.name} imported with ID {self.new_network.id}.\n"+
                          f"Scenario ID:{self.new_network.scenarios[0].id}")
         else:
-            raise HydraPluginError("A network ID must be specified!")
+            raise HydraClientError("A network ID must be specified!")
         return network
 
 
@@ -276,7 +275,7 @@ class ImportJSON:
                     replacement_ra_id = dupe_removed_attrs[attr_id]['id']
                     if self.rs_lookup.get(replacement_ra_id):
                         #there's data on both RAs, so err on the side of caution and leave the dupe in
-                        raise HydraPluginError(f"A duplicate attribute has been found for {ra_j.name} on {resource_j.name}.\n"+
+                        raise HydraClientError(f"A duplicate attribute has been found for {ra_j.name} on {resource_j.name}.\n"+
                                 f"Delete one of the resource scenario {ra_j.id} or {dupe_removed_attrs[attr_id].id}")
                     else:
                         self.rs_lookup[ra_j.id]['resource_attr_id'] = dupe_removed_attrs[attr_id]['id']
