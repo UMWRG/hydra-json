@@ -21,7 +21,7 @@ import logging
 import zipfile
 import tempfile
 
-from hydra_client.output import write_progress, write_output, create_xml_response
+from hydra_client.output import write_progress, write_output
 from hydra_client import RequestError
 from hydra_client import HydraPluginError
 from hydra_client.objects import ExtendedDict
