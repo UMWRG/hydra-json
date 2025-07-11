@@ -1,7 +1,7 @@
 import click
 from hydra_json import ImportJSON, ExportJSON
 
-from hydra_client.connection import JSONConnection, RemoteJSONConnection
+from hydra_client.connection import RemoteJSONConnection
 
 global APP_NAME
 APP_NAME='hydra-json'
@@ -15,14 +15,9 @@ def hydra_app(category='import'):
 def get_client(hostname, session_id=None, **kwargs):
     """
     """
-    if hostname is not None and hostname.startswith('http'):
-        return RemoteJSONConnection(app_name=APP_NAME,
+    return RemoteJSONConnection(app_name=APP_NAME,
                                     url=hostname,
                                     session_id=session_id)
-
-    return JSONConnection(app_name=APP_NAME,
-                          db_url=hostname,
-                          **kwargs)
 
 def get_logged_in_client(context, user_id=None):
     session = context['session']
