@@ -14,10 +14,6 @@ def hydra_app(category='import'):
 
 def get_client(hostname, session_id=None, **kwargs):
     """
-        Get the client connection to Hydra. If a hostname is passed,
-        and the host name starts with 'http', then connect to hydra server
-        using a remote connection. Otherwise connect with a local connection
-        to hydra_base
     """
     if hostname is not None and hostname.startswith('http'):
         return RemoteJSONConnection(app_name=APP_NAME,

@@ -54,8 +54,8 @@ import time
 import re
 import logging
 import zipfile
-
-from hydra_base.lib.objects import JSONObject
+from hydra_client.objects import ExtendedDict
+from hydra_client.
 
 from hydra_client.output import write_progress,\
                                write_output
@@ -102,11 +102,11 @@ class ExportJSON:
             For a given resource, extract the attributes from it.
         """
         #why is this not already a JSON Objject??
-        resource.attributes = [JSONObject(a) for a in resource.attributes]
+        resource.attributes = [ExtendedDict(a) for a in resource.attributes]
         for res_attr in resource.attributes:
             res_attr.id = res_attr.id * -1
             res_attr.attr_id = res_attr.attr_id * -1
-            self.attr_dict[res_attr.attr_id] = JSONObject(
+            self.attr_dict[res_attr.attr_id] = ExtendedDict(
                 {'name': res_attr.name,
                  'dimension':self.get_dimension_name(res_attr.dimension_id)})
 
@@ -166,10 +166,10 @@ class ExportJSON:
             scenario.resourcescenarios_1 = []
 
             for r_s in scenario.resourcescenarios:
-                new_rs = JSONObject({})
+                new_rs = ExtendedDict({})
                 new_rs.resource_attr_id = r_s.resource_attr_id * -1
                 dataset = r_s.dataset
-                new_rs.dataset = JSONObject(dataset)
+                new_rs.dataset = ExtendedDict(dataset)
                 scenario.resourcescenarios_1.append(new_rs)
 
             scenario.resourcescenarios = scenario.resourcescenarios_1

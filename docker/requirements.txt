@@ -1,4 +1,2 @@
 git+https://github.com/UMWRG/hydra-json.git@master
-git+https://github.com/hydraplatform/hydra-base.git@master
 git+https://github.com/hydraplatform/hydra-client-python.git@master
-git+https://github.com/pywr/hydra-pywr-common.git@master

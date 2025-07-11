@@ -24,7 +24,7 @@ import tempfile
 from hydra_client.output import write_progress, write_output, create_xml_response
 from hydra_client import RequestError
 from hydra_client import HydraPluginError
-from hydra_base.lib.objects import JSONObject
+from hydra_client.objects import ExtendedDict
 
 import json
 
@@ -88,7 +88,7 @@ class ImportJSON:
             with open(network, 'r') as netfile:
                 json_data = json.load(netfile)
 
-            self.input_network = JSONObject(json_data['network'])
+            self.input_network = ExtendedDict(json_data['network'])
 
             if project_id is None:
                 project = self.create_project()
@@ -222,7 +222,7 @@ class ImportJSON:
 
         #Map the file's negative attr_id to the DB's positive ID
         for neg_id in json_attributes:
-            attr_j = JSONObject(json_attributes[neg_id])
+            attr_j = ExtendedDict(json_attributes[neg_id])
             if attr_j.dimension is None or attr_j.dimension.strip() == '':
                 attr_j.dimension_id = None
             else:
@@ -386,12 +386,12 @@ class ImportJSON:
             for t in r.get('types', []):
                 if t['code'] not in rule_type_definition_codes:
                     if t.get('typedefinition') is not None:
-                        self.client.add_rule_type_definition(JSONObject(t['typedefinition']))
+                        self.client.add_rule_type_definition(ExtendedDict(t['typedefinition']))
                     else:
                         # if the rule hasn't come with a typedefintiion, just make one where the name is the same as the code
-                        self.client.add_rule_type_definition(JSONObject({'code':t['code'], 'name': t['name']}))
+                        self.client.add_rule_type_definition(ExtendedDict({'code':t['code'], 'name': t['name']}))
 
-            self.client.add_rule(JSONObject(r))
+            self.client.add_rule(ExtendedDict(r))
 
 
     def get_network_file_name(self, base_path, not_valid_filenames):
